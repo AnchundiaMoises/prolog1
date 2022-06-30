@@ -1,0 +1,59 @@
+%hechos
+hombre(moises).
+hombre(francisco).
+hombre(mario).
+hombre(eduardo).
+hombre(luis).
+mujer(alicia).
+mujer(beatriz).
+mujer(veronica).
+mujer(victoria).
+esposos(francisco,victoria).
+esposos(mario,alicia).
+esposos(eduardo,veronica).
+padre(francisco,alicia).
+madre(victoria,alicia).
+padre(francisco,eduardo).
+madre(victoria,eduardo).
+padre(mario,beatriz).
+madre(alicia,beatriz).
+padre(eduardo,luis).
+madre(veronica,luis).
+%lista
+progenitor_hombre(francisco,[alicia,eduardo]).
+progenitor_mujer(victoria,[alicia,eduardo,moises]).
+progenitor_Lista(francisco,[alicia,eduardo]).
+progenitor_Lista(victoria,[alicia,eduardo,moises]).
+%
+progenitor(francisco,alicia).
+progenitor(francisco,eduardo).
+progenitor(victoria,alicia).
+progenitor(victoria,eduardo).
+progenitor(mario,beatriz).
+progenitor(alicia,beatriz).
+progenitor(eduardo,luis).
+progenitor(veronica,luis).
+%reglas
+hijo(Y,X):- padre(X,Y),hombre(Y).
+hijo(Y,X):- madre(X,Y),mujer(Y).
+hijo(Y,X):- padre(X,Y),mujer(Y).
+hijo(Y,X):- madre(X,Y),hombre(Y).
+ancestro(X,Y):- padre(X,Z),padre(Z,Y).
+ancestro(X,Y):- padre(X,Z),madre(Z,Y).
+ancestro(X,Y):- madre(X,Z),padre(Z,Y).
+ancestro(X,Y):- madre(X,Z),madre(Z,Y).
+nieto(X,Y):-ancestro(Y,X).
+hermano(X,Y):- padre(Z,X),padre(Z,Y).
+hermano(X,Y):- madre(Z,X),madre(Z,Y).
+sobrino(X,Y):-hermano(Z,Y),padre(Z,X).
+sobrino(X,Y):-hermano(Z,Y),madre(Z,X).
+tio(X,Y):-sobrino(Y,X).
+primo(X,Y):-tio(A,X),padre(B,Y),hermano(A,B),not(X=Y).
+primo(X,Y):-tio(A,X),madre(B,Y),hermano(A,B),not(X=Y).
+%regla de recurcividad
+es_antepasado(X,Y):- progenitor(X,Y).
+es_antepasado(X,Y):- progenitor(X,Z), es_antepasado(Z,Y).
+%regla de concatenacion
+%---- funcion---
+%contatenar([],L2,L2).
+% contatenar([L|Cl],L2,[L|Cc]):- contatenar(Cl,L2,Cc).
